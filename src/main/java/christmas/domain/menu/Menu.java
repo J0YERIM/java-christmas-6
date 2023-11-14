@@ -1,5 +1,8 @@
 package christmas.domain.menu;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum Menu {
     MUSHROOM_SOUP("양송이수프", 6_000, MenuCategory.APPETIZER),
     TAPAS("타파스", 5_500, MenuCategory.APPETIZER),
@@ -22,6 +25,12 @@ public enum Menu {
         this.name = name;
         this.price = price;
         this.category = category;
+    }
+
+    public static Optional<Menu> findByName(String menuName) {
+        return Arrays.stream(Menu.values())
+                .filter(menu -> menu.name.equalsIgnoreCase(menuName))
+                .findFirst();
     }
 
     public String getName() {

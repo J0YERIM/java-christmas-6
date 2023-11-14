@@ -2,7 +2,6 @@ package christmas.domain.discount;
 
 import christmas.domain.order.Order;
 import java.time.LocalDate;
-import java.util.List;
 
 public class WeekendDiscount extends DiscountPolicy {
 
