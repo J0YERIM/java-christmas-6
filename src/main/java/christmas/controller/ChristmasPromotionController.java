@@ -1,7 +1,10 @@
 package christmas.controller;
 
+import christmas.domain.order.Order;
+import christmas.exception.InvalidDateException;
 import christmas.service.DiscountService;
 import christmas.service.OrderService;
+import christmas.view.InputView;
 
 /**
  * 크리스마스 프로모션 이벤트의 메인 컨트롤러입니다.
@@ -17,16 +20,23 @@ public class ChristmasPromotionController {
         this.discountService = discountService;
     }
 
-    // TODO: Controller의 로직이 복잡해지거나, Service 계층에 다른 Service를 주입해야 할 경우, 파사드 패턴을 고려합니다.
     public void run() {
         // TODO: 사용자 입력 받기
+        Order order = inputVisitDate();
         // TODO: 주문 처리
         // TODO: 할인 처리
         // TODO: 결과 출력
     }
 
-    private void inputDate() {
-        // TODO: InputView를 통해 사용자로부터 날짜를 입력받는다.
+    private Order inputVisitDate() {
+        while (true) {
+            try {
+                int day = InputView.inputVisitDate();
+                return orderService.createOrder(day);
+            } catch (InvalidDateException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     private void inputOrder() {
