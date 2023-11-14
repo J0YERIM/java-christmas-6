@@ -7,7 +7,11 @@ import christmas.domain.order.Order;
  */
 public class OrderService {
 
-    public Order createOrderFromString(String orderString) {
+    public Order createOrder(int day) {
+        return new Order(day);
+    }
+
+    public Order createOrderItemFromString(String orderItemString) {
         // TODO: 주문 문자열을 파싱하여 Order 객체를 생성하는 로직을 구현합니다.
         // Service 계층에 적절한지 검토
         return null;
