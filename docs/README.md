@@ -71,13 +71,25 @@ src
     - 책임 및 역할
         - 사용자 입력을 처리하고, 적절한 서비스 계층의 메소드를 호출합니다.
         - 처리 결과를 OutputView를 통해 사용자에게 출력합니다.
+    - 필드
+      - orderService(OrderService): 주문과 관련된 비즈니스 로직을 처리하는 서비스 계층
+      - discountService(DiscountService): 할인 정책과 관련된 비즈니스 로직을 처리하는 서비스 계층
+    - 메소드
+      - run(): 전체적인 프로그램의 흐름을 제어합니다.
+      - inputOrderDate(): InputView를 통해 주문 날짜를 입력받습니다.
+      - inputOrderItems(): InputView를 통해 메뉴 주문을 입력받습니다.
+      - processOrder(): 주문 처리를 위해 서비스 계층의 메소드를 호출합니다.
+      - processDiscount(): 할인 처리를 위해 서비스 계층의 메소드를 호출합니다.
+      - printResult(): 처리 결과를 출력합니다.
 
 ### domain
 - `Menu.java` (enum)
     - 설명: 식당의 메뉴 항목 하나를 나타냅니다.
-    - 필드: 이름(String), 가격(int), 카테고리(enum)
+    - 필드: name(String), price(int), category(MenuCategory)
     - 책임 및 역할
         - 메뉴 항목의 이름, 가격, 카테고리를 관리합니다.
+    - 메소드
+      - 각 필드의 getter 메소드: 필요한지 검토 후 수정
     - 가정
         - 메뉴 항목의 이름과 가격은 변경되지 않습니다.
 - `MenuCategory.java` (enum)
@@ -88,11 +100,15 @@ src
 - `Order.java` (class)
     - 설명: 고객의 전체 주문을 나타냅니다.
     - 필드
-        - 주문한 메뉴 목록(List<Menu, Integer>): 주문한 메뉴와 수량을 관리합니다.
-        - 주문 날짜(LocalDate): 주문한 날짜를 관리합니다.
+        - orderItems(List<OrderItem>): 주문한 메뉴와 수량을 관리합니다.
+        - orderDate(LocalDate): 주문한 날짜를 관리합니다.
     - 책임 및 역할
         - 주문 날짜와 OrderItem 목록을 관리합니다.
         - 주문의 유효성 검사를 수행합니다.
+    - 메소드
+      - isAddableOrderItem(OrderItem orderItem): 주문에 메뉴 항목을 추가할 수 있는지 확인합니다.
+      - validateOrderItems(): 주문 상품이 해당 주문에 추가 가능한지 검증합니다.
+      - validateOrderDate(): 주문 날짜가 유효한지 검증합니다.
 - `OrderItem.java` (class)
     - 설명: 주문의 개별 메뉴 항목과 수량을 나타냅니다.
     - 필드
@@ -100,25 +116,29 @@ src
         - quantity(int): 주문한 메뉴의 수량
     - 책임 및 역할
         - 주문에 대한 메뉴 항목과 수량을 관리합니다.
-        - 주문의 유효성 검사를 수행합니다.
-- `DiscountPolicy.java` (interface)
+        - 주문 상품의 유효성 검사를 수행합니다.
+    - 메소드
+      - validateQuantity(): 주문 상품의 수량이 유효한지 검증합니다.
+      - 각 필드의 getter 메소드: 필요한지 검토 후 수정
+- `DiscountPolicy.java` (abstract class)
     - 설명: 할인 정책을 나타냅니다.
     - 책임 및 역할: 다양한 할인 정책 구현을 위한 메소드를 제공합니다.
     - 필드
-        - period(List<LocalDate>): 할인 기간
+        - startDate(LocalDate): 할인 정책의 시작 날짜
+        - endDate(LocalDate): 할인 정책의 종료 날짜
     - 메소드
         - calculateDiscountAmount(Order order): 주문 금액을 받아 할인 금액을 계산합니다.
         - isDiscountable(Order order): 주문이 할인 정책에 적합한지 확인합니다.
-        - isPeriod(LocalDate date): 특정 날짜가 할인 기간에 포함되는지 확인합니다.
 - `ChristmasDayDiscount.java`, `WeekdayDiscount.java`, `WeekendDiscount.java`, `SpecialDiscount.java`,`GiftEvent.java` (class)
-    - 설명: DiscountPolicy 인터페이스를 구현하는 각각의 할인 정책 클래스입니다.
+    - 설명: DiscountPolicy 추상 클래스를 상속하는 각각의 할인 정책 클래스입니다.
     - 책임 및 역할: 할인 정책에 따른 할인 금액을 계산합니다.
 - `Badge.java` (enum)
     - 설명: 이벤트 참여자에게 배지의 종류를 제한된 값들 중 하나로 명확하게 정의합니다.
     - 필드
-        - STAR(별): 5천 원 이상
-        - TREE(트리): 1만원 이상
-        - SANTA(산타): 2만원 이상
+      - standard(int): 배지의 기준 금액
+          - STAR(별): 5천 원 이상
+          - TREE(트리): 1만원 이상
+          - SANTA(산타): 2만원 이상
     - 책임 및 역할: 배지의 종류를 관리합니다.
     - 메소드
         - determineBadgeForAmount(int totalDiscountAmount): 총 할인 금액을 받아 배지의 종류를 반환합니다.
@@ -131,39 +151,45 @@ src
         - 총 할인 금액을 계산합니다.
         - 할인 후 예상 결제 금액을 계산합니다.
     - 메소드
-        - calculateTotalPrice(): 총 주문 금액을 계산합니다. -> List<Menu, Integer>를 이용해 메뉴 가격과 수량을 곱한 후 합산
-        - calculateDiscountAmount(): 총 할인 금액을 계산합니다. -> 할인 정책을 통해 할인 금액을 받아 합산
-        - calculateExpectedPaymentAmount(): 할인 후 예상 결제 금액을 계산합니다. -> 총 주문 금액에서 총 할인 금액을 뺀 값
+        - createOrder(String orderString): 주문 문자열을 받아 Order 객체를 생성합니다.
 - `DiscountService.java` (class)
     - 설명: 할인 정책과 관련된 비즈니스 로직을 처리합니다.
     - 책임 및 역할
         - 주문에 적용할 수 있는 할인 정책을 결정하고 적용합니다.
         - 각 할인 정책에 따른 할인 금액을 계산합니다.
+    - 필드
+        - discountPolicies(List<DiscountPolicy>): 할인 정책 목록
     - 메소드
-        - applyDiscountPolicy(Order order): 주문에 적용할 수 있는 할인 정책을 결정하고 적용합니다. -> 할인 정책을 순차적으로 검사하여 적용 가능한 정책이 있으면 적용
-        - calculateTotalDiscount(Order order): 주문에 적용된 모든 할인의 총액을 계산합니다. -> 주문에 적용된 할인 정책을 순차적으로 검사하여 적용된 정책의 할인 금액을 합산
+      - createOrderFromString(String orderString): 주문 문자열을 받아 Order 객체를 생성합니다. -> Service 계층에 적절한지 검토
+      - calculateTotalAmount(Order order): 주문을 받아 총 주문 금액을 계산합니다.
+      - calculateTotalDiscountAmount(Order order): 주문을 받아 총 할인 금액을 계산합니다.
+      - calculatePayAmount(Order order): 주문을 받아 할인 후 예상 결제 금액을 계산합니다.
 
 ### view
 - `InputView.java` (class)
     - 설명: 사용자의 입력을 받습니다.
     - 책임 및 역할
         - 사용자의 입력을 받습니다.
-        - 입력된 데이터의 유효성을 검사합니다.
+        - 오류가 발생할 경우 오류 메시지를 출력하고 재입력을 요청합니다.
+    - 메소드
+      - inputVisitDate(): 방문 예정 날짜를 입력받습니다.
+      - inputOrderItems(): 메뉴 주문을 입력받습니다.
 - `OutputView.java` (class)
     - 설명: 사용자에게 출력합니다.
     - 책임 및 역할
         - 사용자에게 출력합니다.
 
 ### util
-- 'DateUtils.java' (class)
+- `DateUtils.java` (class)
     - 설명: 날짜와 관련된 유틸리티 메소드를 제공합니다.
     - 책임 및 역할
         - 주어진 날짜가 주말인지 평일인지 판단합니다.
         - 특정 날짜 범위 내에 주어진 날짜가 포함되는지 판단합니다.
     - 메소드
         - isWeekend(LocalDate date): 날짜를 입력받아 해당 날짜의 주말 여부를 반환합니다.
+        - isSpecialDiscountDay(LocalDate date): 날짜를 입력받아 해당 날짜가 특별 할인 날짜인지 여부를 반환합니다.
+        - isSundayOrChristmas(LocalDate date): 날짜를 입력받아 해당 날짜가 일요일 또는 크리스마스인지 여부를 반환합니다.
         - isWithinPeriod(LocalDate date, LocalDate startDate, LocalDate endDate): 날짜를 입력받아 해당 날짜가 특정 날짜 범위 내에 포함되는지 여부를 반환합니다.
-        - isWithinList(LocalDate date, List<LocalDate> dates): 날짜를 입력받아 해당 날짜가 특정 날짜 목록 내에 포함되는지 여부를 반환합니다.
 
 ### 기타
 - `Application.java` (class)
