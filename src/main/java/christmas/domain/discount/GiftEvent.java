@@ -2,7 +2,6 @@ package christmas.domain.discount;
 
 import christmas.domain.order.Order;
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * 증정 이벤트를 나타내는 클래스입니다.

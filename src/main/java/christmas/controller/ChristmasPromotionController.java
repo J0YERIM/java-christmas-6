@@ -2,6 +2,7 @@ package christmas.controller;
 
 import christmas.domain.order.Order;
 import christmas.exception.InvalidDateException;
+import christmas.exception.InvalidOrderException;
 import christmas.service.DiscountService;
 import christmas.service.OrderService;
 import christmas.view.InputView;
@@ -21,30 +22,35 @@ public class ChristmasPromotionController {
     }
 
     public void run() {
-        // TODO: 사용자 입력 받기
-        Order order = inputVisitDate();
-        // TODO: 주문 처리
-        // TODO: 할인 처리
-        // TODO: 결과 출력
+        Order order = processOrder();
+        processDiscount();
+        displayResult();
     }
 
-    private Order inputVisitDate() {
+    private Order processOrder() {
+        int visitDate = getValidVisitDate();
+        return createOrderWithValidItems(visitDate);
+    }
+
+    private int getValidVisitDate() {
         while (true) {
             try {
-                int day = InputView.inputVisitDate();
-                return orderService.createOrder(day);
+                return InputView.inputVisitDate();
             } catch (InvalidDateException e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
-    private void inputOrder() {
-        // TODO: InputView를 통해 사용자로부터 주문을 입력받는다.
-    }
-
-    private void processOrder() {
-        // TODO: OrderService를 통해 주문을 처리한다.
+    private Order createOrderWithValidItems(int visitDate) {
+        while (true) {
+            try {
+                String orderItemsString = InputView.inputOrderItems();
+                return orderService.processOrder(visitDate, orderItemsString);
+            } catch (InvalidOrderException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     private void processDiscount() {

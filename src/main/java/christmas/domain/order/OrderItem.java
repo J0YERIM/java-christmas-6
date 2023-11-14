@@ -1,6 +1,9 @@
 package christmas.domain.order;
 
 import christmas.domain.menu.Menu;
+import christmas.exception.InvalidOrderException;
+import christmas.util.Constants;
+import java.util.Objects;
 
 public class OrderItem {
 
@@ -9,12 +12,14 @@ public class OrderItem {
 
     public OrderItem(Menu menu, int quantity) {
         this.menu = menu;
-        this.quantity = quantity;
-        validateQuantity();
+        this.quantity = validateQuantity(quantity);
     }
 
-    private void validateQuantity() {
-        // TODO: 수량이 유효한지 검증하는 로직을 구현합니다.
+    private int validateQuantity(int quantity) {
+        if (quantity < Constants.MIN_QUANTITY) {
+            throw new InvalidOrderException();
+        }
+        return quantity;
     }
 
     public Menu getMenu() {
@@ -25,5 +30,22 @@ public class OrderItem {
     public int getQuantity() {
         // TODO: 필요한지 검토
         return quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        OrderItem orderItem = (OrderItem) o;
+        return menu.equals(orderItem.menu);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(menu);
     }
 }

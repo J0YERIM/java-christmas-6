@@ -15,7 +15,7 @@ public class InputView {
     }
 
     public static String inputOrderItems() {
-        // TODO: 사용자로부터 주문 항목을 입력받는 로직을 구현한다.
-        return null;
+        System.out.println("주문하실 메뉴를 메뉴와 개수를 알려 주세요. (e.g. 해산물파스타-2,레드와인-1,초코케이크-1)");
+        return Console.readLine();
     }
 }

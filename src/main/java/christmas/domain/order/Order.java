@@ -1,11 +1,12 @@
 package christmas.domain.order;
 
 import christmas.exception.InvalidDateException;
+import christmas.exception.InvalidOrderException;
 import christmas.util.Constants;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 고객의 전체 주문을 나타내는 클래스입니다.
@@ -13,11 +14,15 @@ import java.util.List;
 public class Order {
 
     private final LocalDate orderDate;
-    private final List<OrderItem> orderItems = new ArrayList<>();
+    private final Set<OrderItem> orderItems = new HashSet<>();
 
     public Order(int orderDate) {
+        this.orderDate = createOrderDate(orderDate);
+    }
+
+    private LocalDate createOrderDate(int orderDate) {
         validateOrderDate(orderDate);
-        this.orderDate = convertToDate(orderDate);
+        return LocalDate.of(Constants.CURRENT_YEAR, Constants.DECEMBER, orderDate);
     }
 
     private void validateOrderDate(int orderDate) {
@@ -27,15 +32,14 @@ public class Order {
         }
     }
 
-    private LocalDate convertToDate(int orderDate) {
-        return LocalDate.of(Constants.CURRENT_YEAR, Constants.DECEMBER, orderDate);
-    }
-
     private void validateOrderItem(OrderItem orderItem) {
-        // TODO: 주문 상품이 해당 주문에 추가 가능한지 검증하는 로직을 구현합니다.
+        if (orderItems.contains(orderItem)) {
+            throw new InvalidOrderException();
+        }
     }
 
-    public void isAddableOrderItem(OrderItem orderItem) {
+    public void addOrderItem(OrderItem orderItem) {
         validateOrderItem(orderItem);
+        orderItems.add(orderItem);
     }
 }

@@ -2,7 +2,6 @@ package christmas.domain.discount;
 
 import christmas.domain.order.Order;
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * 평일 할인 정책을 나타내는 클래스입니다.
