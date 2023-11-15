@@ -12,18 +12,26 @@ import java.util.List;
 
 public class ChristmasConfig {
 
-    public OrderService createOrderService() {
-        DiscountService discountService = createDiscountService();
+    public OrderService createOrderService(DiscountService discountService) {
         return new OrderService(discountService);
     }
 
     public DiscountService createDiscountService() {
-        List<DiscountPolicy> discountPolicies = List.of(
+        List<DiscountPolicy> discountPolicies = createDiscountPolicies();
+        DiscountPolicy giftEvent = createGiftEvent();
+        return new DiscountService(discountPolicies, giftEvent);
+    }
+
+    private List<DiscountPolicy> createDiscountPolicies() {
+        return List.of(
                 new ChristmasCountdownDiscount(),
                 new WeekdayDiscount(),
                 new WeekendDiscount(),
                 new SpecialDiscount()
         );
-        return new DiscountService(discountPolicies, new GiftEvent());
+    }
+
+    private DiscountPolicy createGiftEvent() {
+        return new GiftEvent();
     }
 }

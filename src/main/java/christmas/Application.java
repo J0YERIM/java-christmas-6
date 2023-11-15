@@ -9,8 +9,8 @@ public class Application {
 
     public static void main(String[] args) {
         ChristmasConfig config = new ChristmasConfig();
-        OrderService orderService = config.createOrderService();
         DiscountService discountService = config.createDiscountService();
+        OrderService orderService = config.createOrderService(discountService);
 
         ChristmasPromotionController controller = new ChristmasPromotionController(orderService,
                 discountService);
