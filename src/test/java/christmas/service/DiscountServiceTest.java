@@ -2,6 +2,7 @@ package christmas.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import christmas.domain.badge.Badge;
 import christmas.domain.discount.ChristmasCountdownDiscount;
 import christmas.domain.discount.DiscountPolicy;
 import christmas.domain.discount.GiftEvent;
@@ -28,10 +29,9 @@ class DiscountServiceTest {
                 new ChristmasCountdownDiscount(),
                 new WeekdayDiscount(),
                 new WeekendDiscount(),
-                new SpecialDiscount(),
-                new GiftEvent()
+                new SpecialDiscount()
         );
-        discountService = new DiscountService(discountPolicies);
+        discountService = new DiscountService(discountPolicies, new GiftEvent());
 
         testOrder = new Order(3);
         testOrder.addOrderItem(new OrderItem(Menu.T_BONE_STEAK, 1));
@@ -90,9 +90,15 @@ class DiscountServiceTest {
     @Test
     @DisplayName("총 혜택 금액이 올바르게 계산되는지 확인")
     void testCalculateTotalDiscountAmount() {
-        int totalDiscountAmount = discountService.calculateTotalDiscountAmount(testOrder);
-
+        int totalBenefitAmount = discountService.calculateTotalBenefitAmount(testOrder);
         int expectedDiscount = 31246;
-        assertEquals(expectedDiscount, totalDiscountAmount);
+        assertEquals(expectedDiscount, totalBenefitAmount);
+    }
+
+    @Test
+    @DisplayName("해당 주문의 배지가 올바르게 계산되는지 확인")
+    void testDetermineBadgeForOrder() {
+        Badge badge = discountService.determineBadgeForOrder(testOrder);
+        assertEquals(Badge.SANTA, badge);
     }
 }
