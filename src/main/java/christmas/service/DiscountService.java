@@ -34,7 +34,7 @@ public class DiscountService {
 
     public Badge determineBadgeForOrder(Order order) {
         int totalBenefitAmount = calculateTotalBenefitAmount(order);
-        return Badge.getBadgeForTotalBenefitAmount(totalBenefitAmount);
+        return Badge.fromAmount(totalBenefitAmount);
     }
 
     public String getGiftEvent(Order order) {

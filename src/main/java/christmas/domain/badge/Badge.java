@@ -17,7 +17,7 @@ public enum Badge {
         this.name = name;
     }
 
-    public static Badge getBadgeForTotalBenefitAmount(int amount) {
+    public static Badge fromAmount(int amount) {
         return Arrays.stream(Badge.values())
                 .filter(badge -> amount >= badge.standardAmount)
                 .findFirst()
