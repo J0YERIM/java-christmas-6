@@ -17,7 +17,6 @@ public class ChristmasCountdownDiscount extends DiscountPolicy {
 
     @Override
     protected int calculateDiscountAmount(Order order) {
-        // 시작일로부터 몇일이 지났는지 계산
         long daysFromStart = ChronoUnit.DAYS.between(startDate, order.getOrderDate());
         return Constants.CHRISTMAS_DISCOUNT_START_AMOUNT
                 + Constants.CHRISTMAS_DISCOUNT_INCREMENT_AMOUNT * (int) daysFromStart;
