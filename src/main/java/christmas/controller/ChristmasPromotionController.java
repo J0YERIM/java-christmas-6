@@ -25,7 +25,10 @@ public class ChristmasPromotionController {
     public void run() {
         OutputView.printWelcomeMessage();
         Order order = processOrder();
-        displayResult(order);
+        displayPreview(order);
+        displayOrderDetails(order);
+        displayDiscounts(order);
+        displayFinalResult(order);
     }
 
     private Order processOrder() {
@@ -54,13 +57,22 @@ public class ChristmasPromotionController {
         }
     }
 
-    private void displayResult(Order order) {
+    private void displayPreview(Order order) {
         OutputView.printPreviewMessage(order.getOrderDate());
+    }
+
+    private void displayOrderDetails(Order order) {
         OutputView.printOrderDetails(order.getOrderItems());
         OutputView.printTotalPriceBeforeDiscount(orderService.calculateTotalAmount(order));
+    }
+
+    private void displayDiscounts(Order order) {
         OutputView.printGift(discountService.getGiftEvent(order));
         OutputView.printDiscountDetails(discountService.getDiscountDetails(order));
         OutputView.printTotalBenefitAmount(discountService.calculateTotalBenefitAmount(order));
+    }
+
+    private void displayFinalResult(Order order) {
         OutputView.printTotalPriceAfterDiscount(orderService.calculatePayAmount(order));
         OutputView.printBadge(discountService.determineBadgeForOrder(order));
     }
