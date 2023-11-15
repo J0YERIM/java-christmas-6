@@ -27,4 +27,9 @@ public class ChristmasCountdownDiscount extends DiscountPolicy {
     protected boolean isSpecificDiscountable(Order order) {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "크리스마스 디데이 할인";
+    }
 }

@@ -6,7 +6,8 @@ public enum Badge {
 
     SANTA(20_000, "산타"),
     TREE(10_000, "트리"),
-    STAR(5_000, "별");
+    STAR(5_000, "별"),
+    NONE(0, "없음");
 
     private final int standardAmount;
     private final String name;

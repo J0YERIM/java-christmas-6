@@ -25,4 +25,9 @@ public class WeekendDiscount extends DiscountPolicy {
     public boolean isSpecificDiscountable(Order order) {
         return DateUtils.isWeekend(order.getOrderDate());
     }
+
+    @Override
+    public String toString() {
+        return "주말 할인";
+    }
 }

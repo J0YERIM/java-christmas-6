@@ -23,12 +23,10 @@ public class OrderItem {
     }
 
     public Menu getMenu() {
-        // TODO: 필요한지 검토
         return menu;
     }
 
     public int getQuantity() {
-        // TODO: 필요한지 검토
         return quantity;
     }
 

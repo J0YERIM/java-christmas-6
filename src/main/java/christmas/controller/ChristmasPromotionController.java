@@ -6,6 +6,7 @@ import christmas.exception.InvalidOrderException;
 import christmas.service.DiscountService;
 import christmas.service.OrderService;
 import christmas.view.InputView;
+import christmas.view.OutputView;
 
 /**
  * 크리스마스 프로모션 이벤트의 메인 컨트롤러입니다.
@@ -22,9 +23,9 @@ public class ChristmasPromotionController {
     }
 
     public void run() {
+        OutputView.printWelcomeMessage();
         Order order = processOrder();
-        processDiscount();
-        displayResult();
+        displayResult(order);
     }
 
     private Order processOrder() {
@@ -53,11 +54,14 @@ public class ChristmasPromotionController {
         }
     }
 
-    private void processDiscount() {
-        // TODO: DiscountService를 통해 할인을 처리한다.
-    }
-
-    private void displayResult() {
-        // TODO: OutputView를 통해 결과를 출력한다.
+    private void displayResult(Order order) {
+        OutputView.printPreviewMessage(order.getOrderDate());
+        OutputView.printOrderDetails(order.getOrderItems());
+        OutputView.printTotalPriceBeforeDiscount(orderService.calculateTotalAmount(order));
+        OutputView.printGift(discountService.getGiftEvent(order));
+        OutputView.printDiscountDetails(discountService.getDiscountDetails(order));
+        OutputView.printTotalBenefitAmount(discountService.calculateTotalBenefitAmount(order));
+        OutputView.printTotalPriceAfterDiscount(orderService.calculatePayAmount(order));
+        OutputView.printBadge(discountService.determineBadgeForOrder(order));
     }
 }

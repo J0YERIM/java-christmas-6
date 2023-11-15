@@ -23,4 +23,9 @@ public class GiftEvent extends DiscountPolicy {
     public boolean isSpecificDiscountable(Order order) {
         return order.calculateTotalAmount() >= Constants.GIFT_EVENT_STANDARD_AMOUNT;
     }
+
+    @Override
+    public String toString() {
+        return "증정 이벤트";
+    }
 }
