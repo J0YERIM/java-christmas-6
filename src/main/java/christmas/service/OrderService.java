@@ -13,6 +13,12 @@ import java.util.stream.Collectors;
  */
 public class OrderService {
 
+    private final DiscountService discountService;
+
+    public OrderService(DiscountService discountService) {
+        this.discountService = discountService;
+    }
+
     public Order processOrder(int day, String orderItemsString) {
         Order order = createOrder(day);
         List<OrderItem> orderItems = parseOrderItems(orderItemsString);
@@ -58,17 +64,10 @@ public class OrderService {
     }
 
     public int calculateTotalAmount(Order order) {
-        // TODO: 주문의 총 금액을 계산하는 로직을 구현합니다.
-        return 0;
-    }
-
-    public int calculateTotalDiscountAmount(Order order) {
-        // TODO: DiscountService를 이용하여 주문의 총 할인 금액을 계산하는 로직을 구현합니다.
-        return 0;
+        return order.calculateTotalAmount();
     }
 
     public int calculatePayAmount(Order order) {
-        // TODO: 총 주문 금액에서 총 할인 금액을 뺀 최종 결제 금액을 계산하는 로직을 구현합니다.
-        return 0;
+        return calculateTotalAmount(order) - discountService.calculateTotalDiscountAmount(order);
     }
 }
