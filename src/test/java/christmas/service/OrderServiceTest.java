@@ -24,8 +24,7 @@ class OrderServiceTest {
             new ChristmasCountdownDiscount(),
             new WeekdayDiscount(),
             new WeekendDiscount(),
-            new SpecialDiscount(),
-            new GiftEvent()
+            new SpecialDiscount()
     );
 
     private OrderService orderService;
@@ -33,7 +32,7 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        DiscountService discountService = new DiscountService(discountPolicies);
+        DiscountService discountService = new DiscountService(discountPolicies, new GiftEvent());
         orderService = new OrderService(discountService);
 
         testOrder = new Order(3);

@@ -26,6 +26,14 @@ public class OrderService {
         return order;
     }
 
+    public int calculateTotalAmount(Order order) {
+        return order.calculateTotalAmount();
+    }
+
+    public int calculatePayAmount(Order order) {
+        return calculateTotalAmount(order) - discountService.calculateTotalDiscountAmount(order);
+    }
+
     private List<OrderItem> parseOrderItems(String orderItemsString) {
         return Arrays.stream(orderItemsString.split(","))
                 .map(this::parseOrderItem)
@@ -61,13 +69,5 @@ public class OrderService {
 
     private Order createOrder(int day) {
         return new Order(day);
-    }
-
-    public int calculateTotalAmount(Order order) {
-        return order.calculateTotalAmount();
-    }
-
-    public int calculatePayAmount(Order order) {
-        return calculateTotalAmount(order) - discountService.calculateTotalDiscountAmount(order);
     }
 }
