@@ -46,12 +46,17 @@ public class DiscountService {
 
     public Map<String, Integer> getDiscountDetails(Order order) {
         Map<String, Integer> discountDetails = new HashMap<>();
-        discountPolicies.forEach(policy -> {
+        addPolicyDiscountDetails(discountDetails, order, discountPolicies);
+        addPolicyDiscountDetails(discountDetails, order, List.of(giftEventPolicy));
+        return discountDetails;
+    }
+
+    private void addPolicyDiscountDetails(Map<String, Integer> details, Order order, List<DiscountPolicy> policies) {
+        policies.forEach(policy -> {
             int discountAmount = policy.calculateDiscountAmountIfDiscountable(order);
             if (discountAmount > 0) {
-                discountDetails.put(policy.toString(), discountAmount);
+                details.put(policy.toString(), discountAmount);
             }
         });
-        return discountDetails;
     }
 }
