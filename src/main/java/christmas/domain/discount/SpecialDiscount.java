@@ -24,4 +24,9 @@ public class SpecialDiscount extends DiscountPolicy {
     public boolean isSpecificDiscountable(Order order) {
         return DateUtils.isSpecialDiscountDay(order.getOrderDate());
     }
+
+    @Override
+    public String toString() {
+        return "특별 할인";
+    }
 }

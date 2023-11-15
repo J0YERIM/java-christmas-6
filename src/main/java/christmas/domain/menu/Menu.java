@@ -8,7 +8,7 @@ public enum Menu {
     TAPAS("타파스", 5_500, MenuCategory.APPETIZER),
     CAESAR_SALAD("시저샐러드", 8_000, MenuCategory.APPETIZER),
     T_BONE_STEAK("티본스테이크", 55_000, MenuCategory.MAIN_DISH),
-    BBQ_RIPS("바베큐립", 54_000, MenuCategory.MAIN_DISH),
+    BBQ_RIPS("바비큐립", 54_000, MenuCategory.MAIN_DISH),
     SEAFOOD_PASTA("해산물파스타", 35_000, MenuCategory.MAIN_DISH),
     CHRISTMAS_PASTA("크리스마스파스타", 25_000, MenuCategory.MAIN_DISH),
     CHOCOLATE_CAKE("초코케이크", 15_000, MenuCategory.DESSERT),
@@ -34,17 +34,14 @@ public enum Menu {
     }
 
     public String getName() {
-        // TODO: 필요한지 검토
         return name;
     }
 
     public int getPrice() {
-        // TODO: 필요한지 검토
         return price;
     }
 
     public MenuCategory getCategory() {
-        // TODO: 필요한지 검토
         return category;
     }
 }

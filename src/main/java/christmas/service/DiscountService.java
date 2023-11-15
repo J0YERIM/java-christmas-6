@@ -3,7 +3,9 @@ package christmas.service;
 import christmas.domain.badge.Badge;
 import christmas.domain.discount.DiscountPolicy;
 import christmas.domain.order.Order;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 할인 정책과 관련된 비즈니스 로직을 처리하는 서비스 클래스입니다.
@@ -33,5 +35,23 @@ public class DiscountService {
     public Badge determineBadgeForOrder(Order order) {
         int totalBenefitAmount = calculateTotalBenefitAmount(order);
         return Badge.getBadgeForTotalBenefitAmount(totalBenefitAmount);
+    }
+
+    public String getGiftEvent(Order order) {
+        if (giftEventPolicy.calculateDiscountAmountIfDiscountable(order) > 0) {
+            return "샴페인 1개";
+        }
+        return "없음";
+    }
+
+    public Map<String, Integer> getDiscountDetails(Order order) {
+        Map<String, Integer> discountDetails = new HashMap<>();
+        discountPolicies.forEach(policy -> {
+            int discountAmount = policy.calculateDiscountAmountIfDiscountable(order);
+            if (discountAmount > 0) {
+                discountDetails.put(policy.toString(), discountAmount);
+            }
+        });
+        return discountDetails;
     }
 }
