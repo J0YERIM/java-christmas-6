@@ -1,6 +1,9 @@
 package christmas.domain.discount;
 
+import christmas.domain.menu.MenuCategory;
 import christmas.domain.order.Order;
+import christmas.util.Constants;
+import christmas.util.DateUtils;
 import java.time.LocalDate;
 
 /**
@@ -8,19 +11,21 @@ import java.time.LocalDate;
  */
 public class WeekdayDiscount extends DiscountPolicy {
 
-    public WeekdayDiscount(LocalDate startDate, LocalDate endDate) {
-        super(startDate, endDate);
+    public WeekdayDiscount() {
+        super(LocalDate.of(Constants.CURRENT_YEAR, Constants.DECEMBER, Constants.START_DAY),
+                LocalDate.of(Constants.CURRENT_YEAR, Constants.DECEMBER, Constants.END_DAY));
     }
 
     @Override
     public int calculateDiscountAmount(Order order) {
-        // TODO: 할인 금액을 계산하는 로직을 구현합니다.
-        return 0;
+        return order.getOrderItems().stream()
+                .filter(item -> item.getMenu().getCategory() == MenuCategory.DESSERT)
+                .mapToInt(item -> item.getQuantity() * Constants.WEEKDAY_DISCOUNT_AMOUNT)
+                .sum();
     }
 
     @Override
-    public boolean isDiscountable(Order order) {
-        // TODO: 할인 가능한지 검증하는 로직을 구현합니다.
-        return false;
+    public boolean isSpecificDiscountable(Order order) {
+        return !DateUtils.isWeekend(order.getOrderDate());
     }
 }

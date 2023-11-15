@@ -2,19 +2,45 @@ package christmas.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import christmas.domain.discount.ChristmasCountdownDiscount;
+import christmas.domain.discount.DiscountPolicy;
+import christmas.domain.discount.GiftEvent;
+import christmas.domain.discount.SpecialDiscount;
+import christmas.domain.discount.WeekdayDiscount;
+import christmas.domain.discount.WeekendDiscount;
+import christmas.domain.menu.Menu;
+import christmas.domain.order.Order;
+import christmas.domain.order.OrderItem;
 import christmas.exception.InvalidDateException;
 import christmas.exception.InvalidOrderException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class OrderServiceTest {
 
+    private final List<DiscountPolicy> discountPolicies = List.of(
+            new ChristmasCountdownDiscount(),
+            new WeekdayDiscount(),
+            new WeekendDiscount(),
+            new SpecialDiscount(),
+            new GiftEvent()
+    );
+
     private OrderService orderService;
+    private Order testOrder;
 
     @BeforeEach
     void setUp() {
-        orderService = new OrderService();
+        DiscountService discountService = new DiscountService(discountPolicies);
+        orderService = new OrderService(discountService);
+
+        testOrder = new Order(3);
+        testOrder.addOrderItem(new OrderItem(Menu.T_BONE_STEAK, 1));
+        testOrder.addOrderItem(new OrderItem(Menu.BBQ_RIPS, 1));
+        testOrder.addOrderItem(new OrderItem(Menu.CHOCOLATE_CAKE, 2));
+        testOrder.addOrderItem(new OrderItem(Menu.ZERO_COLA, 1));
     }
 
     @Test
@@ -73,5 +99,21 @@ class OrderServiceTest {
         InvalidOrderException thrown = assertThrows(InvalidOrderException.class,
                 () -> orderService.processOrder(validDay, invalidFormatString));
         assertEquals("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("할인 전 총주문 금액을 계산함")
+    void calculateTotalAmount() {
+        int expected = 142_000;
+        int actual = orderService.calculateTotalAmount(testOrder);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("할인 후 예상 결제 금액 계산함")
+    void calculateTotalAmountWithDiscount() {
+        int expected = 135_754;
+        int actual = orderService.calculatePayAmount(testOrder);
+        assertEquals(expected, actual);
     }
 }

@@ -42,4 +42,18 @@ public class Order {
         validateOrderItem(orderItem);
         orderItems.add(orderItem);
     }
+
+    public LocalDate getOrderDate() {
+        return orderDate;
+    }
+
+    public Set<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public int calculateTotalAmount() {
+        return orderItems.stream()
+                .mapToInt(item -> item.getMenu().getPrice() * item.getQuantity())
+                .sum();
+    }
 }

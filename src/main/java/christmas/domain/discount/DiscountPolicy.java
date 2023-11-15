@@ -1,6 +1,9 @@
 package christmas.domain.discount;
 
+import christmas.domain.menu.MenuCategory;
 import christmas.domain.order.Order;
+import christmas.util.Constants;
+import christmas.util.DateUtils;
 import java.time.LocalDate;
 
 /**
@@ -16,19 +19,26 @@ public abstract class DiscountPolicy {
         this.endDate = endDate;
     }
 
-    /**
-     * 주문에 적용할 할인 금액을 계산합니다.
-     *
-     * @param order 주문 객체
-     * @return 할인 금액
-     */
-    public abstract int calculateDiscountAmount(Order order);
+    protected abstract int calculateDiscountAmount(Order order);
 
-    /**
-     * 주문이 할인 정책에 적합한지 확인합니다.
-     *
-     * @param order 주문 객체
-     * @return 할인 가능 여부
-     */
-    public abstract boolean isDiscountable(Order order);
+    protected abstract boolean isSpecificDiscountable(Order order);
+
+    protected boolean isWithinDiscountPeriod(LocalDate date) {
+        return DateUtils.isWithinPeriod(date, startDate, endDate);
+    }
+
+    protected boolean isCommonDiscountable(Order order) {
+        return order.calculateTotalAmount() >= Constants.MINIMUM_ORDER_AMOUNT_FOR_DISCOUNT
+                && order.getOrderItems().stream()
+                .anyMatch(item -> item.getMenu().getCategory() != MenuCategory.DRINK)
+                && order.getOrderItems().size() <= Constants.MAXIMUM_ORDER_ITEM_COUNT;
+    }
+
+    public int calculateDiscountAmountIfDiscountable(Order order) {
+        if (isWithinDiscountPeriod(order.getOrderDate()) && isCommonDiscountable(order)
+                && isSpecificDiscountable(order)) {
+            return calculateDiscountAmount(order);
+        }
+        return Constants.ZERO;
+    }
 }

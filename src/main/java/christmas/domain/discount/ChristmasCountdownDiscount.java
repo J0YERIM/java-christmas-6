@@ -1,26 +1,30 @@
 package christmas.domain.discount;
 
 import christmas.domain.order.Order;
+import christmas.util.Constants;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 /**
  * 크리스마스 디데이 할인 정책을 나타내는 클래스입니다.
  */
 public class ChristmasCountdownDiscount extends DiscountPolicy {
 
-    public ChristmasCountdownDiscount(LocalDate startDate, LocalDate endDate) {
-        super(startDate, endDate);
+    public ChristmasCountdownDiscount() {
+        super(LocalDate.of(Constants.CURRENT_YEAR, Constants.DECEMBER, Constants.START_DAY),
+                LocalDate.of(Constants.CURRENT_YEAR, Constants.DECEMBER, Constants.CHRISTMAS_DAY));
     }
 
     @Override
-    public int calculateDiscountAmount(Order order) {
-        // TODO: 할인 금액을 계산하는 로직을 구현합니다.
-        return 0;
+    protected int calculateDiscountAmount(Order order) {
+        // 시작일로부터 몇일이 지났는지 계산
+        long daysFromStart = ChronoUnit.DAYS.between(startDate, order.getOrderDate());
+        return Constants.CHRISTMAS_DISCOUNT_START_AMOUNT
+                + Constants.CHRISTMAS_DISCOUNT_INCREMENT_AMOUNT * (int) daysFromStart;
     }
 
     @Override
-    public boolean isDiscountable(Order order) {
-        // TODO: 할인 가능한지 검증하는 로직을 구현합니다.
-        return false;
+    protected boolean isSpecificDiscountable(Order order) {
+        return true;
     }
 }

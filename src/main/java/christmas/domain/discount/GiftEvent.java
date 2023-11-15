@@ -1,6 +1,7 @@
 package christmas.domain.discount;
 
 import christmas.domain.order.Order;
+import christmas.util.Constants;
 import java.time.LocalDate;
 
 /**
@@ -8,19 +9,18 @@ import java.time.LocalDate;
  */
 public class GiftEvent extends DiscountPolicy {
 
-    public GiftEvent(LocalDate startDate, LocalDate endDate) {
-        super(startDate, endDate);
+    public GiftEvent() {
+        super(LocalDate.of(Constants.CURRENT_YEAR, Constants.DECEMBER, Constants.START_DAY),
+                LocalDate.of(Constants.CURRENT_YEAR, Constants.DECEMBER, Constants.END_DAY));
     }
 
     @Override
     public int calculateDiscountAmount(Order order) {
-        // TODO: 할인 금액을 계산하는 로직을 구현합니다.
-        return 0;
+        return Constants.GIFT_EVENT_DISCOUNT_AMOUNT;
     }
 
     @Override
-    public boolean isDiscountable(Order order) {
-        // TODO: 할인 가능한지 검증하는 로직을 구현합니다.
-        return false;
+    public boolean isSpecificDiscountable(Order order) {
+        return order.calculateTotalAmount() >= Constants.GIFT_EVENT_STANDARD_AMOUNT;
     }
 }
